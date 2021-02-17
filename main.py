@@ -42,7 +42,8 @@ def retrieve_info():
 
     s = BeautifulSoup(r.text, features='html.parser')
 
-    delivered = extract_info(s, 'Vaccine doses delivered to the cantons and FL')
+    delivered = extract_info(s,
+                             'Vaccine doses delivered to the cantons and FL')
     administered = extract_info(s, 'Vaccine doses administered')
 
     return delivered, administered
@@ -63,7 +64,7 @@ class App():
 
 
 if __name__ == '__main__':
-    state_file = os.environ.get('STATE_FILE',  DEFAULT_STATE_FILE)
+    state_file = os.environ.get('STATE_FILE', DEFAULT_STATE_FILE)
     app = App(state_file)
 
     date_last_tweet = app.read_date_last_tweet()

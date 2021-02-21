@@ -42,11 +42,11 @@ def retrieve_info():
 
     s = BeautifulSoup(r.text, features='html.parser')
 
-    delivered = extract_info(s,
-                             'Vaccine doses delivered to the cantons and FL')
-    administered = extract_info(s, 'Vaccine doses administered')
+    delivered = extract_info(s, 'Vaccine doses delivered to cantons and FL')
+    administered = extract_info(s, 'Administered vaccine doses')
+    fully_vaccinated = extract_info(s, 'Fully vaccinated people')
 
-    return delivered, administered
+    return delivered, administered, fully_vaccinated
 
 
 class App():
@@ -63,16 +63,21 @@ class App():
             return datetime.fromtimestamp(0)
 
 
-if __name__ == '__main__':
+def main():
     state_file = os.environ.get('STATE_FILE', DEFAULT_STATE_FILE)
     app = App(state_file)
 
     date_last_tweet = app.read_date_last_tweet()
 
-    delivered, administered = retrieve_info()
-    data_date = max(delivered.date, administered.date)
+    delivered, administered, fully_vaccinated = retrieve_info()
+    data_date = max(max(delivered.date, administered.date),
+                    fully_vaccinated.date)
 
     if date_last_tweet < data_date:
         with open(state_file, 'w') as f:
             st = 1 + data_date.timestamp()  # avoid rounding errors
             f.write(f'{st:0.0f}')
+
+
+if __name__ == '__main__':
+    main()

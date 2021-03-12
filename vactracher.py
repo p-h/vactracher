@@ -1,5 +1,5 @@
 import os
-import toml
+import sys
 from collections import namedtuple
 from datetime import datetime
 import requests
@@ -78,14 +78,13 @@ class App:
 
 
 def main():
-    d = toml.load("secrets.toml")
-
     state_file = os.environ.get("STATE_FILE", DEFAULT_STATE_FILE)
-
-    api_key = d["api_key"]
-    api_secret = d["api_secret"]
-    access_token = d["access_token"]
-    access_token_secret = d["access_token_secret"]
+    api_key = os.environ.get("API_KEY") or sys.exit("Not API_KEY set")
+    api_secret = os.environ.get("API_SECRET") or sys.exit("Not API_SECRET set")
+    access_token = os.environ.get("ACCESS_TOKEN") or sys.exit("Not ACCESS_TOKEN set")
+    access_token_secret = os.environ.get("ACCESS_TOKEN_SECRET") or sys.exit(
+        "Not ACCESS_TOKEN_SECRET set"
+    )
     app = App(state_file, api_key, api_secret, access_token, access_token_secret)
 
     date_last_tweet = app.read_date_last_tweet()

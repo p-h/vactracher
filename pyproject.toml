@@ -10,7 +10,6 @@ python = "^3.8"
 requests = "^2.24"
 beautifulsoup4 = "^4.9"
 tweepy = "~3.8"
-toml = "~0.10"
 
 [tool.poetry.dev-dependencies]
 

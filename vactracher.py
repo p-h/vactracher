@@ -82,11 +82,11 @@ class App:
 
 def main():
     state_file = os.environ.get("STATE_FILE", DEFAULT_STATE_FILE)
-    api_key = os.environ.get("API_KEY") or sys.exit("Not API_KEY set")
-    api_secret = os.environ.get("API_SECRET") or sys.exit("Not API_SECRET set")
-    access_token = os.environ.get("ACCESS_TOKEN") or sys.exit("Not ACCESS_TOKEN set")
+    api_key = os.environ.get("API_KEY") or sys.exit("API_KEY not set")
+    api_secret = os.environ.get("API_SECRET") or sys.exit("API_SECRET not set")
+    access_token = os.environ.get("ACCESS_TOKEN") or sys.exit("ACCESS_TOKEN not set")
     access_token_secret = os.environ.get("ACCESS_TOKEN_SECRET") or sys.exit(
-        "Not ACCESS_TOKEN_SECRET set"
+        "ACCESS_TOKEN_SECRET not set"
     )
     app = App(state_file, api_key, api_secret, access_token, access_token_secret)
 

@@ -1,0 +1,11 @@
+input: !Infos
+  delivered: 123
+  administered: 1515
+  fully_vaccinated: 1337
+  data_date: 2021-03-17 17:30:00
+output: |-
+  Vaccine status update as of Mar 17, 2021, 5:30:00 PM
+
+  Delivered vaccines: 123
+  Administered doses: 1,515
+  Fully vaccinated people: 1,337

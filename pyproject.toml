@@ -4,14 +4,22 @@ version = "0.1.0"
 description = "Tweets about Swiss Covid-19 stats"
 authors = ["Philippe Hürlimann <p@hurlimann.org>"]
 license = "AGPL-3.0-or-later"
+packages = [
+    { include = "vactracher.py" },
+    { include = "templates" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.24"
 beautifulsoup4 = "^4.9"
 tweepy = "~3.8"
+babel = "^2.9.0"
+jinja2 = "^2.11.3"
 
 [tool.poetry.dev-dependencies]
+pytest = "^6.2.2"
+pytest-golden = "^0.2.1"
 
 [tool.poetry.scripts]
 vactracher = "vactracher:main"

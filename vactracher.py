@@ -1,15 +1,31 @@
 import os
 import sys
-from collections import namedtuple
+from dataclasses import dataclass
 from datetime import datetime
-import requests
+
+from babel.numbers import format_decimal
+from babel.dates import format_datetime
 from bs4 import BeautifulSoup
+from jinja2 import Environment, PackageLoader
+import requests
 import tweepy
 
 DEFAULT_STATE_FILE = "/tmp/vacstate.txt"
 
-Infos = namedtuple("Infos", "delivered administered fully_vaccinated data_date")
-Info = namedtuple("Info", "n date source")
+
+@dataclass
+class Infos:
+    delivered: int
+    administered: int
+    fully_vaccinated: int
+    data_date: datetime
+
+
+@dataclass
+class Info:
+    n: int
+    date: datetime
+    source: str
 
 
 def extract_description_info(description):
@@ -58,6 +74,7 @@ class App:
         self.api_secret = api_secret
         self.access_token = access_token
         self.access_token_secret = access_token_secret
+        self.env = Environment(loader=PackageLoader("templates", "."))
 
     def read_date_last_tweet(self):
         try:
@@ -72,11 +89,19 @@ class App:
         auth = tweepy.OAuthHandler(self.api_key, self.api_secret)
         auth.set_access_token(self.access_token, self.access_token_secret)
         api = tweepy.API(auth)
-        api.update_status(
-            f"Vaccine status update as of {infos.data_date:%Y-%m-%d %H:%M}:\n"
-            f"Delivered vaccines: {infos.delivered.n}\n"
-            f"Administered doses: {infos.administered.n}\n"
-            f"Fully vaccinated people: {infos.fully_vaccinated.n}"
+        api.update_status(self.render_tweet(infos, "en_US"))
+
+    def render_tweet(self, infos, locale):
+        template = self.env.get_template(f"message.{locale}.jinja2")
+        return template.render(
+            {
+                "date": format_datetime(infos.data_date, locale=locale),
+                "delivered": format_decimal(infos.delivered, locale=locale),
+                "administered": format_decimal(infos.administered, locale=locale),
+                "fully_vaccinated": format_decimal(
+                    infos.fully_vaccinated, locale=locale
+                ),
+            }
         )
 
 

@@ -38,7 +38,7 @@ def extract_description_info(description):
     return date, d["Source"]
 
 
-def extract_info(soup, string):
+def extract_info(soup, string) -> Info:
     header = soup.find(string=string)
     table_head = header.parent.parent
 
@@ -51,7 +51,7 @@ def extract_info(soup, string):
     return Info(n, date, source)
 
 
-def retrieve_info():
+def retrieve_info() -> Infos:
     r = requests.get("https://www.covid19.admin.ch/en/overview")
 
     s = BeautifulSoup(r.text, features="html.parser")
@@ -62,7 +62,7 @@ def retrieve_info():
 
     data_date = max(max(delivered.date, administered.date), fully_vaccinated.date)
 
-    return Infos(delivered, administered, fully_vaccinated, data_date)
+    return Infos(delivered.n, administered.n, fully_vaccinated.n, data_date)
 
 
 class App:
